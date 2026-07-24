@@ -1,0 +1,82 @@
+# Sample operations for Apollo
+# POST http://localhost:4000/graphql
+# Replace SESSION_ID after createSession
+
+mutation RegisterDevice {
+  registerDevice(
+    input: {
+      id: "ring-001"
+      serialNumber: "SN-001"
+      firmwareVersion: "1.0.0"
+      hardwareRevision: "A1"
+      supportedSensors: [imu, ppg, temperature]
+      status: active
+    }
+  ) {
+    id
+    serialNumber
+    supportedSensors
+    status
+  }
+}
+
+mutation CreateSession {
+  createSession(
+    input: {
+      studyId: "study-hrv"
+      studyName: "HRV Pilot"
+      anonymizedParticipantId: "p-anon-42"
+      deviceId: "ring-001"
+      enabledSensors: [imu, ppg]
+    }
+  ) {
+    id
+    studyId
+    deviceId
+    enabledSensors
+  }
+}
+
+mutation IngestBatch {
+  ingestBatch(
+    input: {
+      batchId: "batch-001"
+      deviceId: "ring-001"
+      sessionId: "SESSION_ID"
+      sensorType: imu
+      readings: [
+        {
+          timestamp: "2026-01-01T12:00:00Z"
+          values: { x: 0.01, y: 0.02, z: 0.98 }
+          qualityFlag: "good"
+        }
+        {
+          timestamp: "2026-01-01T12:00:01Z"
+          values: { x: 0.02, y: 0.01, z: 0.97 }
+        }
+      ]
+    }
+  ) {
+    batchId
+    readingCount
+    duplicate
+  }
+}
+
+query SessionReadings {
+  sessionReadings(sessionId: "SESSION_ID") {
+    id
+    batchId
+    sensorType
+    timestamp
+    values
+    qualityFlag
+  }
+}
+
+query ExportSessionCsv {
+  exportSessionCsv(sessionId: "SESSION_ID")
+}
+
+# REST export alternative:
+# GET http://localhost:4000/sessions/SESSION_ID/export

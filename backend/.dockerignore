@@ -1,0 +1,9 @@
+node_modules
+dist
+coverage
+.env
+*.log
+tests
+scripts
+jest.config.js
+README.md

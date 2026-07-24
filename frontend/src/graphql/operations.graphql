@@ -1,0 +1,67 @@
+query GetDevices {
+  devices {
+    id
+    serialNumber
+    firmwareVersion
+    hardwareRevision
+    supportedSensors
+    status
+    createdAt
+  }
+}
+
+query GetSessions {
+  sessions {
+    id
+    studyId
+    studyName
+    anonymizedParticipantId
+    deviceId
+    enabledSensors
+    createdAt
+  }
+}
+
+query GetSessionReadings($sessionId: ID!) {
+  sessionReadings(sessionId: $sessionId) {
+    id
+    batchId
+    sensorType
+    timestamp
+    values
+    qualityFlag
+  }
+}
+
+mutation RegisterDevice($input: RegisterDeviceInput!) {
+  registerDevice(input: $input) {
+    id
+    serialNumber
+    firmwareVersion
+    hardwareRevision
+    supportedSensors
+    status
+  }
+}
+
+mutation CreateSession($input: CreateSessionInput!) {
+  createSession(input: $input) {
+    id
+    studyId
+    studyName
+    anonymizedParticipantId
+    deviceId
+    enabledSensors
+  }
+}
+
+mutation IngestBatch($input: IngestBatchInput!) {
+  ingestBatch(input: $input) {
+    batchId
+    deviceId
+    sessionId
+    sensorType
+    readingCount
+    duplicate
+  }
+}
